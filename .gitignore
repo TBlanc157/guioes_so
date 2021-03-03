@@ -1,0 +1,13 @@
+/guiao0
+/guiao2
+/guiao3
+/guiao4
+/guiao5
+/guiao6
+/guiao7
+*.out
+*.txt
+.vscode
+.DS_Store
+p_list
+pessoas
