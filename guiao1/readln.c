@@ -6,40 +6,55 @@
 #include <unistd.h> /* system calls: defs & decls essencials */
 #define MAX_BUFF 1024
 
-ssize_t myreadln(int fd, char *line, size_t size);
 
-int main() {
-    char line[MAX_BUFF];
-    ssize_t bytes, total_bytes = 0, i = 0;
-    int file = open("test.txt", O_RDONLY, 0600);
-
-    if (file == -1) {
-        perror("Error: ");
+int get_alg(int n){
+    int n_alg = 1;
+    while (n >= 10){
+        n_alg++;
+        n /= 10;
     }
-    while ((bytes = myreadln(file, line, MAX_BUFF)) > 0) {
-        total_bytes += bytes;
-        printf("\t%ld\t%ld: %s\n", bytes, i + 1, line);
-        i++;
-        lseek(file, total_bytes + i, SEEK_SET);
-    }
-
-    return 0;
+    return n_alg;
 }
 
 ssize_t myreadln(int fd, char *line, size_t size) {
-    size_t bytes, i = 0;
-    char *tmp = malloc(size);
-    
-    if ((bytes = read(fd, tmp, size) == 0))
-        return 0;
+    ssize_t bytes, i;
 
-    for (; (tmp[i]) && (tmp[i] != '\n'); i++){
-        line[i] = tmp[i];
+    if ((bytes = read(fd, line, size)) < 0)
+        return -1;
+        
+    for(i = 0; i < bytes && line[i] != '\n'; i++);
+    if (line[i] == '\n') i++;
+
+    lseek(fd, (i-bytes), SEEK_CUR);
+    return i;
+}
+
+int main(int argc, char **argv){
+    int fd;
+    if (argc == 0)
+        fd = 0;
+    else {
+        fd = open(argv[1], O_RDONLY, 0600);
+        if (fd == -1) {
+            perror("Error: ");
+            return -1;
+        }
     }
 
-    line[i] = '\0';
+    char buffer[MAX_BUFF];
+    int nl = 1;
+    ssize_t bytes;
+    while((bytes = myreadln(fd, buffer, MAX_BUFF)) > 0) {
+        char line[3 + get_alg(nl)];
+        int size = sprintf(line, "\t%d:\t", nl);
+        if (buffer[0] != '\n'){
+            write(1, line, size);
+            nl++;
+        }
+        write(1, buffer, bytes);
+    }
 
-    free(tmp);
-
-    return i;
+    putchar('\n');
+    close(fd);
+    return 0;
 }
