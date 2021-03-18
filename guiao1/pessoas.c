@@ -13,12 +13,11 @@ typedef struct pessoas {
 } PESSOAS;
 
 // Retorna o ídice onde inseriu a struct
-int add_pessoa(int fd, int age, char *name) {
+int add_pessoa(int fd, int age, char *name){
     PESSOAS p;
     p.idade = age;
     strcpy((p.nome), name);
 
-    // Caulculo do indice - perguntar tortuga.
     int index = 0;
     off_t off = lseek(fd, 0, SEEK_END);
     index = off / sizeof(struct pessoas);
