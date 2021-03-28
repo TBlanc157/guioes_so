@@ -13,6 +13,7 @@ void create_son(int counter){
     if (counter > 10)
         return;
     pid_t pid;
+    int status;
     if ((pid = fork()) == 0){
         // código filho
         printf("%d: SON #%d; MY FATHER #%d\n", counter, getpid(), getppid());
@@ -20,9 +21,5 @@ void create_son(int counter){
         create_son(counter+1);
         _exit(counter);
     }
-    else {
-        // código pai
-        _exit(0);
-    }
-    _exit(0);
+    else wait(&status);
 }
