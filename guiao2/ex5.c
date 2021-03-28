@@ -2,13 +2,24 @@
 #include <sys/wait.h>
 #include <stdio.h>
 
-void create_son(int counter);
+//void create_son(int counter);
 
 int main() {
-    create_son(1);
+    //create_son(1);
+    int status;
+    pid_t res_fork;
+    for (int i = 1; i <= 10; i++) {
+        if ((res_fork = fork()) == 0)
+            printf("[%d]-SON #%d; my father is %d\n", i, getpid(), getppid());
+        else {
+            wait(&status);
+            //printf("[%d]-FATHER #%d; my father is %d\n", i, getpid(), getppid());
+            _exit(i);
+        }    
+    }
     return 0;
 }
-
+/*
 void create_son(int counter){
     if (counter > 10)
         return;
@@ -22,4 +33,4 @@ void create_son(int counter){
         _exit(counter);
     }
     else wait(&status);
-}
+}*/
