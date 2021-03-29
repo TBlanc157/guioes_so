@@ -42,18 +42,27 @@ int main(int argc, char **argv) {
             _exit(-1);
         }
     }
-
+    int found_rows[10];
+    int c = 0;
     for (int i = 0; i < rows; i++) {
         pid_t terminated_pid = wait(&status);
 
         if (WEXITSTATUS(status))
-            if (WEXITSTATUS(status) < 255)
+            if (WEXITSTATUS(status) < 255) {
                 printf("[pai] process %d exited, found number at row %d\n", terminated_pid, i);
+                found_rows[c] = i;
+                c++;
+            }
             else
                 printf("[pai] process %d exited, the needle was not found\n", terminated_pid);
         else
             printf("[pai] process %d exited, but something went wrong", terminated_pid);
     }
 
+    printf("As linhas onde se encontraram a needle foram: \n");
+    for (int i = 0; i < c; i++) {
+        printf("%d ", found_rows[i]);
+    }
+    putchar('\n');
     return 0;
 }
