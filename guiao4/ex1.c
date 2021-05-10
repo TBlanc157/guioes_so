@@ -7,10 +7,10 @@
 #include <string.h>
 
 int main(int argc, char **argv) {
-    int fout = open("saida.txt", O_CREAT || O_WRONLY || O_TRUNC, 0666);
-    int ferr = open("erros.txt", O_CREAT || O_WRONLY || O_TRUNC, 0666);
+    int fout = open("saida.txt", O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    int ferr = open("erros.txt", O_CREAT | O_WRONLY | O_TRUNC, 0666);
     int fin  = open("/etc/passwd", O_RDONLY, NULL);
-    int res, i = 0;
+    int res = 0, i = 0;
 
     res = dup2(fin, 0);
     res = dup2(fout, 1);
