@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
                 i = 0;
             }
         }
+        _exit(1);
     }
     else
         wait(&status);
