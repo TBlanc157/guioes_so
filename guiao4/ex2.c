@@ -1,4 +1,3 @@
-
 #include <unistd.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -19,18 +18,25 @@ int main(int argc, char **argv) {
     close(fout);
     close(ferr);
 
-    char buffer;
-    char line[128];
-    ssize_t read_res;
-    while ((read_res = read(0, &buffer, 1)) > 0) {
-        line[i] = buffer;
-        i++;
-        if (buffer == '\n') {
-            write(1, line, i);
-            write(2, line, i);
-            fflush(stdout);
-            i = 0;
+    int status;
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+        char buffer;
+        char line[128];
+        ssize_t read_res;
+        while ((read_res = read(0, &buffer, 1)) > 0) {
+            line[i] = buffer;
+            i++;
+            if (buffer == '\n') {
+                write(1, line, i);
+                write(2, line, i);
+                fflush(stdout);
+                i = 0;
+            }
         }
     }
+    else
+        wait(&status);
+    
     return 0;
 }
