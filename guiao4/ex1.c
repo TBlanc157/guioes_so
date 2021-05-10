@@ -22,8 +22,7 @@ int main(int argc, char **argv) {
     char buffer;
     char line[128];
     ssize_t read_res;
-    int end = 0;
-    while ((read_res = read(0, &buffer, 1)) > 0 && !end) {
+    while ((read_res = read(0, &buffer, 1)) > 0) {
         line[i] = buffer;
         i++;
         if (buffer == '\n') {
