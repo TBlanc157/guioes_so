@@ -42,7 +42,7 @@ int main() {
         close(p[0]);
         sleep(3);
         write(p[1], &line, strlen(line));
-        printf("[PAI] wrote a line to pipe\n");
+        printf("[PAI] wrote a \"%s\" line to pipe\n", line);
         close(p[1]);
         wait(&status);
     }
