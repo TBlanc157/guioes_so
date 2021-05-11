@@ -6,9 +6,9 @@
 
 int main() {
     int p[2];
-    char line[] = "Ayyo do a kickflip!";
+    char line[] = "Ayyo do a kickflip!\0";
     char buffer[20];
-    ssize_t res;
+    ssize_t res = 0;
     int status;
 
     if (pipe(p) == -1) {
@@ -27,8 +27,11 @@ int main() {
         /* FILHO: */
         // fechar descritor de escrita no filho
         close(p[1]);
-        res = read(p[0], &buffer, sizeof(buffer));
-        printf("[FILHO]: read \"%s\" from pipe res %ld\n", buffer, res);
+        while ((res = read(p[0], &buffer, 5)) > 0) {
+            char linha[res];
+            snprintf(linha, res+1, "%s", buffer);
+            printf("[FILHO]: read \"%s\" from pipe res %ld\n", linha, res);
+        }
         close(p[0]);
         _exit(0);
         break;
@@ -37,7 +40,7 @@ int main() {
         /* PAI: */
         // fechar descritor de leitura no pai
         close(p[0]);
-        sleep(5);
+        sleep(3);
         write(p[1], &line, strlen(line));
         printf("[PAI] wrote a line to pipe\n");
         close(p[1]);
