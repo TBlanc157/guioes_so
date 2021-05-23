@@ -7,7 +7,6 @@
 
 int main() {
     int p[2];
-    //int ifd = open("/etc", O_RDONLY);    
     if (pipe(p) == -1) {
         perror("pipe");
         return -1;
